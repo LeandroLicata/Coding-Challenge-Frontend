@@ -5,7 +5,7 @@ export default function Home() {
   const { products } = useProducts();
 
   return (
-    <main className="min-h-[100vh]">
+    <main className="min-h-screen bg-gradient-to-br from-purple-500 to-teal-400">
       <CardsContainer products={products} />
     </main>
   );
