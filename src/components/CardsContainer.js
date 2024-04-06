@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import useProducts from "@/hooks/useProducts";
 
-const CardsContainer = ({ products }) => {
+const CardsContainer = () => {
   const [selectedId, setSelectedId] = useState(null);
+  const { products, handleDeleteProduct } = useProducts();
 
   return (
     <div className="py-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-10">
@@ -102,7 +104,7 @@ const CardsContainer = ({ products }) => {
                         currency: "ARS",
                       }).format(products[selectedId].price)}
                     </p>
-                    <p className="text-gray-700 text-base mb-2">
+                    <p className="text-gray-700 text-base mb-2 overflow-auto h-20">
                       {products[selectedId].description}
                     </p>
                   </div>
@@ -117,7 +119,12 @@ const CardsContainer = ({ products }) => {
                     <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4">
                       Actualizar
                     </button>
-                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    <button
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() =>
+                        handleDeleteProduct(products[selectedId], setSelectedId)
+                      }
+                    >
                       Borrar
                     </button>
                   </div>
