@@ -1,28 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { createProduct, updateProduct } from "@/features/product/productSlice";
 import useBrands from "@/hooks/useBrands";
 
-const ProductForm = ({ product = {}, isEditing }) => {
+const ProductForm = ({ id, product = {}, isEditing }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
   const dispatch = useDispatch();
   const { brands } = useBrands();
 
+  useEffect(() => {
+    setValue("name", product.name || "");
+    setValue("description", product.description || "");
+    setValue("image_url", product.image_url || "");
+    setValue("price", product.price || null);
+    setValue("brand", product.Brand ? product.Brand.name : "");
+  }, [product, setValue]);
+
   const onSubmit = (data) => {
     if (isEditing) {
-      dispatch(updateProduct({ id: product.id, data }));
+      dispatch(updateProduct({ productId: id, productData: data }));
     } else {
       dispatch(createProduct(data));
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto bg-white rounded-lg p-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="max-w-md mx-auto bg-white rounded-lg p-4"
+    >
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"

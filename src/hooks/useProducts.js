@@ -2,12 +2,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, deleteProduct } from "@/features/product/productSlice";
 import Swal from "sweetalert2";
-import { useRouter } from "next/router";
 
 const useProducts = () => {
   const products = useSelector((state) => state.product.products);
   const dispatch = useDispatch();
-  const router = useRouter();
 
   useEffect(() => {
     dispatch(fetchProducts());

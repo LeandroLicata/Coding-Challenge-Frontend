@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useProducts from "@/hooks/useProducts";
+import { useRouter } from "next/router";
 
 const CardsContainer = () => {
   const [selectedId, setSelectedId] = useState(null);
   const { products, handleDeleteProduct } = useProducts();
+  const router = useRouter();
 
   return (
     <div className="py-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-10">
@@ -116,7 +118,14 @@ const CardsContainer = () => {
                     />
                   </div>
                   <div className="flex justify-end mt-4">
-                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4">
+                    <button
+                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4"
+                      onClick={() => {
+                        router.push(
+                          `/products/update/${products[selectedId].id}`
+                        );
+                      }}
+                    >
                       Actualizar
                     </button>
                     <button

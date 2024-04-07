@@ -10,6 +10,14 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+export const fetchProductById = createAsyncThunk(
+  "products/fetchProductById",
+  async (productId) => {
+    const response = await axios.get(`/products/${productId}`);
+    return response.data;
+  }
+);
+
 export const createProduct = createAsyncThunk(
   "products/createProduct",
   async (productData) => {
@@ -56,6 +64,16 @@ export const productSlice = createSlice({
       .addCase(fetchProducts.rejected, (state) => {
         state.status = "failed";
       })
+      .addCase(fetchProductById.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchProductById.fulfilled, (state, action) => {
+        state.status = "succeded";
+        state.productDetail = action.payload;
+      })
+      .addCase(fetchProductById.rejected, (state) => {
+        state.status = "failed";
+      })
       .addCase(createProduct.pending, (state) => {
         state.status = "loading";
       })
@@ -82,7 +100,7 @@ export const productSlice = createSlice({
       })
       .addCase(deleteProduct.rejected, (state) => {
         state.status = "failed";
-      })
+      });
   },
 });
 
