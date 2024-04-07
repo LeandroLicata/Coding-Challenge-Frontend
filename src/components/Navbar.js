@@ -14,13 +14,19 @@ const Navbar = () => {
         </div>
         <div className="flex items-center">
           <Link href="/">
-            <span className="text-white mr-4 cursor-pointer">Inicio</span>
+            <span className="text-white mr-4 cursor-pointer border-b-2 border-transparent hover:border-white pb-1">
+              Inicio
+            </span>
           </Link>
           <Link href="/products/add">
-            <span className="text-white mr-4 cursor-pointer">Agregar producto</span>
+            <span className="text-white mr-4 cursor-pointer border-b-2 border-transparent hover:border-white pb-1">
+              Agregar producto
+            </span>
           </Link>
           <Link href="/seccion3">
-            <span className="text-white mr-4 cursor-pointer">Sección 3</span>
+            <span className="text-white cursor-pointer border-b-2 border-transparent hover:border-white pb-1">
+              Sección 3
+            </span>
           </Link>
         </div>
       </div>

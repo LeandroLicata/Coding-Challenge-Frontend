@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { createProduct, updateProduct } from "@/features/product/productSlice";
 import useBrands from "@/hooks/useBrands";
+import Swal from "sweetalert2";
+import { useRouter } from "next/router";
 
 const ProductForm = ({ id, product = {}, isEditing }) => {
   const {
@@ -13,20 +15,38 @@ const ProductForm = ({ id, product = {}, isEditing }) => {
   } = useForm();
   const dispatch = useDispatch();
   const { brands } = useBrands();
+  const router = useRouter();
 
-  useEffect(() => {
-    setValue("name", product.name || "");
-    setValue("description", product.description || "");
-    setValue("image_url", product.image_url || "");
-    setValue("price", product.price || null);
-    setValue("brand", product.Brand ? product.Brand.name : "");
-  }, [product, setValue]);
-
-  const onSubmit = (data) => {
-    if (isEditing) {
-      dispatch(updateProduct({ productId: id, productData: data }));
-    } else {
-      dispatch(createProduct(data));
+  const onSubmit = async (data) => {
+    try {
+      if (isEditing) {
+        await dispatch(updateProduct({ productId: id, productData: data }));
+        Swal.fire({
+          icon: "success",
+          title: "Producto actualizado",
+          text: "El producto ha sido actualizado exitosamente.",
+        });
+      } else {
+        await dispatch(createProduct(data));
+        Swal.fire({
+          icon: "success",
+          title: "Producto agregado",
+          text: "El producto ha sido agregado exitosamente.",
+        });
+        // Restablecer los valores del formulario después de crear el producto
+        setValue("name", "");
+        setValue("description", "");
+        setValue("image_url", "");
+        setValue("price", null);
+        setValue("brand", "");
+      }
+      router.push("/");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ha ocurrido un error al procesar la solicitud.",
+      });
     }
   };
 

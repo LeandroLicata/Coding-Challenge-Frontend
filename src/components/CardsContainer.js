@@ -112,7 +112,7 @@ const CardsContainer = () => {
                   </div>
                   <div className="flex items-center">
                     <img
-                      className="w-20 mr-2"
+                      className="h-10 mr-2"
                       src={products[selectedId].Brand?.logo_url}
                       alt={products[selectedId].Brand?.name}
                     />

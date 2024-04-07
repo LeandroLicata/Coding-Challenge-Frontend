@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import Swal from "sweetalert2";
+import { useRouter } from "next/router";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
@@ -21,7 +23,22 @@ export const fetchProductById = createAsyncThunk(
 export const createProduct = createAsyncThunk(
   "products/createProduct",
   async (productData) => {
-    const response = await axios.post("/products", productData);
+    const response = await axios
+      .post("/products", productData)
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Producto agregado",
+          text: "El producto ha sido agregado exitosamente.",
+        })
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ha ocurrido un error al intentar agregar el producto.",
+        });
+      });
     return response.data;
   }
 );
@@ -29,7 +46,22 @@ export const createProduct = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
   async ({ productId, productData }) => {
-    const response = await axios.put(`/products/${productId}`, productData);
+    const response = await axios
+      .put(`/products/${productId}`, productData)
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Producto actualizado",
+          text: "El producto ha sido actualizado exitosamente.",
+        });
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ha ocurrido un error al intentar actualizar el producto.",
+        });
+      });
     return response.data;
   }
 );
