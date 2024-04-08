@@ -51,10 +51,7 @@ const ProductForm = ({ id, product = {}, isEditing }) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="max-w-md mx-auto"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto">
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
@@ -85,13 +82,13 @@ const ProductForm = ({ id, product = {}, isEditing }) => {
         >
           Descripción
         </label>
-        <input
-          type="text"
+        <textarea
           id="description"
           name="description"
           defaultValue={product.description || ""}
           placeholder="Ingrese la descripción del producto"
           {...register("description", { required: true })}
+          rows={4} // Puedes ajustar la cantidad de filas según tu preferencia
           className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
             errors.description ? "border-red-500" : ""
           }`}

@@ -30,7 +30,8 @@ const AuthForm = ({ isRegister }) => {
         if (signupResponse.status === 201) {
           await signIn("credentials", {
             ...data,
-            callbackUrl: "/", // Especifica la ruta a la que deseas redirigir después del registro
+            callbackUrl: "/",
+            redirect: false,
           });
 
           Swal.close();
@@ -74,12 +75,46 @@ const AuthForm = ({ isRegister }) => {
         }
       }
     } else {
-      const result = await signIn("credentials", {
-        ...data,
-        callbackUrl: "/", // Especifica la ruta a la que deseas redirigir después del inicio de sesión
+      Swal.fire({
+        title: "Iniciando sesión...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
       });
-      if (result?.error) {
-        return console.log(result.error);
+      try {
+        const response = await signIn("credentials", {
+          ...data,
+          callbackUrl: "/",
+          redirect: false,
+        });
+
+        if (response.error) {
+          if (response.status === 400) {
+            Swal.fire({
+              title: "Error",
+              text: "Contraseña incorrecta.",
+              icon: "error",
+            });
+          } else {
+            Swal.fire({
+              title: "Error",
+              text: "Error al iniciar sesión.",
+              icon: "error",
+            });
+          }
+        } else {
+          // Inicio de sesión exitoso
+          Swal.close();
+          router.push("/"); // Redireccionar a la página principal
+        }
+      } catch (error) {
+        // Manejo de otros errores
+        Swal.fire({
+          title: "Error",
+          text: "Un error inesperado ha ocurrido.",
+          icon: "error",
+        });
       }
     }
   };
