@@ -53,7 +53,7 @@ const ProductForm = ({ id, product = {}, isEditing }) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="max-w-md mx-auto bg-white rounded-lg p-4"
+      className="max-w-md mx-auto"
     >
       <div className="mb-4">
         <label

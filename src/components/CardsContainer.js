@@ -2,11 +2,38 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useProducts from "@/hooks/useProducts";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 const CardsContainer = () => {
   const [selectedId, setSelectedId] = useState(null);
+  const { data: session } = useSession();
   const { products, handleDeleteProduct } = useProducts();
   const router = useRouter();
+
+  const handleEditProduct = (productId) => {
+    if (!session) {
+      Swal.fire({
+        icon: "warning",
+        title: "Oops...",
+        text: "Debes iniciar sesión para editar productos!",
+      });
+    } else {
+      router.push(`/products/update/${productId}`);
+    }
+  };
+
+  const handleDelete = (product) => {
+    if (!session) {
+      Swal.fire({
+        icon: "warning",
+        title: "Oops...",
+        text: "Debes iniciar sesión para borrar productos!",
+      });
+    } else {
+      handleDeleteProduct(product, setSelectedId);
+    }
+  };
 
   return (
     <div className="py-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-10">
@@ -24,7 +51,7 @@ const CardsContainer = () => {
             onClick={() => setSelectedId(idx)}
           >
             <motion.div
-              className="w-64 bg-white shadow-md rounded-lg overflow-hidden"
+              className="w-64 bg-white shadow-md rounded-lg overflow-hidden flex flex-col"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -33,19 +60,29 @@ const CardsContainer = () => {
                 src={product.image_url}
                 alt={product.name}
               />
-              <motion.div className="p-4">
-                <motion.h2 className="font-bold text-xl mb-2">
+              <motion.div className="p-4 flex flex-col flex-grow">
+                <motion.h2 className="font-bold text-xl mb-2 overflow-auto">
                   {product.name}
                 </motion.h2>
                 <motion.p className="text-gray-700 text-base mb-2">
                   {formattedPrice}
                 </motion.p>
-                <motion.button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => setSelectedId(idx)}
-                >
-                  Ver más
-                </motion.button>
+                <div className="flex-grow" />
+                <div className="flex justify-between items-end">
+                  <motion.button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
+                    onClick={() => setSelectedId(idx)}
+                  >
+                    Ver más
+                  </motion.button>
+                  <div className="flex items-center">
+                    <img
+                      className="h-10 w-20 ml-2 object-contain"
+                      src={product.Brand?.logo_url}
+                      alt={product.Brand?.name}
+                    />
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
           </motion.div>
@@ -61,7 +98,7 @@ const CardsContainer = () => {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="relative w-[50rem] h-[18rem] bg-white shadow-md rounded-lg overflow-hidden flex flex-col"
+              className="relative w-[50rem] bg-white shadow-md rounded-lg overflow-hidden flex flex-col"
               layoutId={selectedId !== null ? products[selectedId].name : null}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -112,7 +149,7 @@ const CardsContainer = () => {
                   </div>
                   <div className="flex items-center">
                     <img
-                      className="h-10 mr-2"
+                      className="h-15 w-20 mr-2 object-contain"
                       src={products[selectedId].Brand?.logo_url}
                       alt={products[selectedId].Brand?.name}
                     />
@@ -120,19 +157,13 @@ const CardsContainer = () => {
                   <div className="flex justify-end mt-4">
                     <button
                       className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4"
-                      onClick={() => {
-                        router.push(
-                          `/products/update/${products[selectedId].id}`
-                        );
-                      }}
+                      onClick={() => handleEditProduct(products[selectedId].id)}
                     >
-                      Actualizar
+                      Editar
                     </button>
                     <button
                       className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                      onClick={() =>
-                        handleDeleteProduct(products[selectedId], setSelectedId)
-                      }
+                      onClick={() => handleDelete(products[selectedId])}
                     >
                       Borrar
                     </button>
