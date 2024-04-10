@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 const CardsContainer = () => {
   const [selectedId, setSelectedId] = useState(null);
   const { data: session } = useSession();
-  const { products, handleDeleteProduct } = useProducts();
+  const { products, handleDeleteProduct, isLoading } = useProducts();
   const router = useRouter();
 
   const handleEditProduct = (productId) => {
@@ -34,6 +34,20 @@ const CardsContainer = () => {
       handleDeleteProduct(product, setSelectedId);
     }
   };
+
+  if (isLoading) {
+    Swal.fire({
+      icon: "info",
+      title: "Cargando productos...",
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+    });
+  } else {
+    Swal.close();
+  }
 
   return (
     <div className="py-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-10">

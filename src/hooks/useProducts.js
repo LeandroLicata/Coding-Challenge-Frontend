@@ -1,14 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, deleteProduct } from "@/features/product/productSlice";
 import Swal from "sweetalert2";
 
 const useProducts = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const products = useSelector((state) => state.product.products);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    setIsLoading(true);
+    dispatch(fetchProducts())
+      .then(() => setIsLoading(false))
+      .catch(() => setIsLoading(false));
   }, [dispatch]);
 
   const handleDeleteProduct = (product, setSelectedId) => {
@@ -20,6 +24,7 @@ const useProducts = () => {
       icon: "question",
     }).then((result) => {
       if (result.isConfirmed) {
+        setIsLoading(true);
         dispatch(deleteProduct(product.id))
           .then(() => {
             Swal.fire({
@@ -29,9 +34,11 @@ const useProducts = () => {
             }).then(() => {
               setSelectedId(null);
               dispatch(fetchProducts());
+              setIsLoading(false);
             });
           })
           .catch(() => {
+            setIsLoading(false);
             Swal.fire({
               icon: "error",
               title: "Error",
@@ -42,7 +49,7 @@ const useProducts = () => {
     });
   };
 
-  return { products, handleDeleteProduct };
+  return { products, isLoading, handleDeleteProduct };
 };
 
 export default useProducts;
