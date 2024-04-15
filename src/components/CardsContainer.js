@@ -50,7 +50,7 @@ const CardsContainer = () => {
   }
 
   return (
-    <div className="py-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-10">
+    <div className="py-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-4 md:px-10">
       {products.map((product, idx) => {
         const formattedPrice = new Intl.NumberFormat("es-AR", {
           style: "currency",
@@ -112,7 +112,7 @@ const CardsContainer = () => {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="relative w-[50rem] bg-white shadow-md rounded-lg overflow-hidden flex flex-col"
+              className="relative w-full md:w-[80%] lg:w-[60%] bg-white shadow-md rounded-lg overflow-hidden flex flex-col"
               layoutId={selectedId !== null ? products[selectedId].name : null}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -138,8 +138,8 @@ const CardsContainer = () => {
                   />
                 </svg>
               </button>
-              <div className="flex flex-1">
-                <div className="w-[20rem] h-[18rem] flex-shrink-0">
+              <div className="flex flex-1 flex-col md:flex-row">
+                <div className="w-full md:w-[40%] h-[18rem] flex-shrink-0">
                   <img
                     className="w-full h-full object-contain"
                     src={products[selectedId].image_url}
@@ -160,13 +160,13 @@ const CardsContainer = () => {
                     <p className="text-gray-700 text-base mb-2 overflow-auto h-20">
                       {products[selectedId].description}
                     </p>
-                  </div>
-                  <div className="flex items-center">
-                    <img
-                      className="h-15 w-20 mr-2 object-contain"
-                      src={products[selectedId].Brand?.logo_url}
-                      alt={products[selectedId].Brand?.name}
-                    />
+                    <div className="flex items-center">
+                      <img
+                        className="h-15 w-20 mr-2 object-contain"
+                        src={products[selectedId].Brand?.logo_url}
+                        alt={products[selectedId].Brand?.name}
+                      />
+                    </div>
                   </div>
                   <div className="flex justify-end mt-4">
                     <button
